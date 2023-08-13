@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Restful controller for the Threads.
@@ -30,6 +31,13 @@ class ThreadController extends AbstractController
 {
     const VIEW_FLAT = 'flat';
     const VIEW_TREE = 'tree';
+
+    private $validator;
+
+    public function setValidator(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
 
     /**
      * Presents the form to use to create a new Thread.
@@ -388,7 +396,7 @@ class ThreadController extends AbstractController
             $thread->setPermalink($permalink);
 
             // Validate the entity
-            $errors = $this->get('validator')->validate($thread, null, ['NewThread']);
+            $errors = $this->validator->validate($thread, null, ['NewThread']);
             if (count($errors) > 0) {
                 return $this->render(
                     '@FOSComment/Thread/errors.html.twig',

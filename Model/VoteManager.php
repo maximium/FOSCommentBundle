@@ -99,8 +99,12 @@ abstract class VoteManager implements VoteManagerInterface
      */
     protected function dispatch(Event $event, $eventName)
     {
-        // LegacyEventDispatcherProxy exists in Symfony >= 4.3
-        if (class_exists(LegacyEventDispatcherProxy::class)) {
+        // get method call signature
+        $dispatchRefl = new \ReflectionMethod($this->dispatcher, 'dispatch');
+        $dispatchParams = $dispatchRefl->getParameters();
+
+        // Use dispatch parameters to determine which signature to use
+        if ($dispatchParams[0]->getType()->getName() === 'object') {
             // New Symfony 4.3 EventDispatcher signature
             $this->dispatcher->dispatch($event, $eventName);
         } else {
