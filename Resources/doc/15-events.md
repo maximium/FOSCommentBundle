@@ -35,6 +35,8 @@ namespace Application\CommentBundle\EventListener;
 use FOS\CommentBundle\Events;
 use FOS\CommentBundle\Event\CommentEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 /**
  * Listener responsible to send email notifications when a comment is persisted
@@ -42,16 +44,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MailNotificationListener implements EventSubscriberInterface
 {
     /**
-    * @var Swift_Mailer
+    * @var MailerInterface
     */
     private $mailer;
 
     /**
      * Constructor.
      *
-     * @param Swift_Mailer     $mailer
+     * @param MailerInterface     $mailer
      */
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }
